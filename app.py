@@ -14,7 +14,7 @@ st.markdown("మీకు తెలిసిన తెలుగునాను�
 with st.form(key="proverb_form"):
     telugu = st.text_input("నానుడి (Telugu Proverb)")
     meaning = st.text_area("అర్థం (Meaning in Telugu)")
-    submit = st.form_submit_button("సమర్పించండి")
+    submit = st.form_submit_button("సమర్పించండి(Submit)")
 
 if submit:
     if telugu.strip() and meaning.strip():
