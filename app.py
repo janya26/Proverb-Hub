@@ -7,7 +7,7 @@ st.set_page_config(page_title="TeluguVillageBot – Proverbs Collector", layout=
 st.title("🌾 TeluguVillageBot: Add a Telugu Proverb")
 
 # CSV file path (must match persistent storage mount)
-data_file = "/data/proverbs.csv"
+data_file = "proverbs.csv"
 
 # Ensure the file exists and has the correct header
 if not os.path.exists(data_file):
