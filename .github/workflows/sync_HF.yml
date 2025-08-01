@@ -9,8 +9,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout Repository (with full history)
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # 🔥 disables shallow clone
 
       - name: Setup Git Identity
         run: |
