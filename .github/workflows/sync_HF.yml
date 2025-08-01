@@ -16,14 +16,15 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "github-actions@github.com"
-
+          
       - name: Pull latest from Hugging Face
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           git remote add hf https://janya26:$HF_TOKEN@huggingface.co/spaces/janya26/Proverb-Hub || true
           git fetch hf main
-          git merge hf/main --no-edit
+          git merge hf/main --allow-unrelated-histories || true
+
 
       - name: Push to Hugging Face
         env:
