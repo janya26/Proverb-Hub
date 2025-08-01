@@ -8,7 +8,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -18,16 +17,16 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "github-actions@github.com"
 
-      - name: Pull latest from Hugging Face (merge unrelated histories)
+      - name: Pull from Hugging Face Space
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          git remote add hf https://janya26:$HF_TOKEN@huggingface.co/spaces/janya26/Proverb-Hub || echo "Remote already exists"
+          git remote add hf https://janya26:${HF_TOKEN}@huggingface.co/spaces/janya26/Proverb-Hub || true
           git fetch hf main
-          git merge hf/main --allow-unrelated-histories -m "Merge HF Space into GitHub" || echo "Nothing to merge or already merged"
+          git merge hf/main --allow-unrelated-histories -m "Merge Hugging Face space into GitHub repo"
 
-      - name: Push to Hugging Face
+      - name: Push to Hugging Face Space
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          git push https://janya26:$HF_TOKEN@huggingface.co/spaces/janya26/Proverb-Hub main
+          git push https://janya26:${HF_TOKEN}@huggingface.co/spaces/janya26/Proverb-Hub main
