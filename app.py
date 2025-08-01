@@ -2,48 +2,46 @@ import streamlit as st
 import pandas as pd
 import os
 
-# File path in current directory
-CSV_FILE = "proverbs.csv"
+# CSV file path in Hugging Face writable directory
+data_file = "/data/proverbs.csv"
 
-# Load or create the DataFrame
-def load_proverbs():
-    if os.path.exists(CSV_FILE):
-        return pd.read_csv(CSV_FILE)
-    else:
-        return pd.DataFrame(columns=["Proverb", "Meaning"])
+# Load existing proverbs or create empty DataFrame
+if os.path.exists(data_file):
+    df = pd.read_csv(data_file)
+else:
+    df = pd.DataFrame(columns=["Proverb", "Meaning / Usage"])
 
-# Save new proverb to the CSV
-def save_proverb(proverb, meaning):
-    try:
-        df = load_proverbs()
-        new_row = {"Proverb": proverb, "Meaning": meaning}
-        df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
-        df.to_csv(CSV_FILE, index=False)
-        return True
-    except Exception as e:
-        st.warning(f"⚠️ Proverb added, but couldn't save to CSV.\n\n{e}")
-        return False
+st.set_page_config(page_title="ProverbHub – Telugu Proverbs", layout="centered")
+st.title("📜 ProverbHub – Telugu Proverbs")
 
-# Streamlit UI
-st.title("📜 తెలుగు నానుడి గూడు")
-st.subheader("Add a Telugu proverb and its meaning")
+st.markdown("Contribute your favorite Telugu proverbs and their meanings to preserve our culture 🌾✨")
 
-# User input
-telugu = st.text_input("నానుడి (Proverb in Telugu)")
-meaning = st.text_area("అర్థం (Meaning in Telugu)")
+with st.form("proverb_form"):
+    proverb = st.text_input("Enter the **Telugu Proverb**:")
+    meaning = st.text_area("Enter its **Meaning or Usage** (in Telugu or English):")
 
-if st.button("Add Proverb"):
-    if telugu.strip() == "" or meaning.strip() == "":
-        st.warning("Both fields are required!")
-    else:
-        success = save_proverb(telugu.strip(), meaning.strip())
-        if success:
-            st.success("✅ Proverb added successfully!")
+    submitted = st.form_submit_button("Submit Proverb")
 
-# Show current proverbs
-with st.expander("📖 View Saved Proverbs"):
-    df = load_proverbs()
-    if df.empty:
-        st.info("No proverbs added yet.")
-    else:
-        st.dataframe(df)
+    if submitted:
+        if proverb.strip() and meaning.strip():
+            new_entry = {"Proverb": proverb.strip(), "Meaning / Usage": meaning.strip()}
+            df = pd.concat([df, pd.DataFrame([new_entry])], ignore_index=True)
+
+            # Try saving to /data
+            try:
+                df.to_csv(data_file, index=False)
+                st.success("✅ Proverb added and saved successfully!")
+            except Exception as e:
+                st.warning("⚠️ Proverb added, but couldn't save to CSV (read-only system).")
+                st.error(f"{e}")
+        else:
+            st.error("🚫 Please fill out both fields.")
+
+# Show existing proverbs
+if not df.empty:
+    st.markdown("---")
+    st.subheader("📚 Proverbs Collection")
+    st.dataframe(df[::-1], use_container_width=True)
+else:
+    st.info("No proverbs added yet. Be the first to contribute! 🌱")
+
