@@ -25,7 +25,7 @@ if submit:
 
 # Display section
 if st.session_state.proverbs:
-    st.subheader("📝 సమర్పించిన నానుడులు")
+    st.subheader("📝 సమర్పించిన నానుడులు (Submitted sentences)")
     for i, (prov, mean) in enumerate(st.session_state.proverbs[::-1], 1):
         st.markdown(f"**{i}. {prov}**  \n📖 {mean}")
 else:
